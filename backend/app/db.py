@@ -11,7 +11,12 @@ from .config import settings
 
 @contextmanager
 def get_conn() -> Iterator[psycopg.Connection]:
-    conn = psycopg.connect(settings.database_url, autocommit=False, row_factory=dict_row)
+    conn = psycopg.connect(
+        settings.database_url,
+        autocommit=False,
+        row_factory=dict_row,
+        connect_timeout=5,
+    )
     try:
         yield conn
         conn.commit()

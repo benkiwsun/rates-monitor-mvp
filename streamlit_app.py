@@ -87,9 +87,12 @@ def _db_ok() -> bool:
 
 
 def _latest_row(code: str) -> dict | None:
-    rows = get_latest_points([code])
-    if rows:
-        return rows[0]
+    try:
+        rows = get_latest_points([code])
+        if rows:
+            return rows[0]
+    except Exception:
+        pass
     if settings.use_sample_fallback:
         if code in SPREAD_SERIES:
             s = SPREAD_SERIES[code]
@@ -99,9 +102,12 @@ def _latest_row(code: str) -> dict | None:
 
 
 def _prev_row(code: str) -> dict | None:
-    row = get_previous_point(code)
-    if row:
-        return row
+    try:
+        row = get_previous_point(code)
+        if row:
+            return row
+    except Exception:
+        pass
     if settings.use_sample_fallback:
         if code in SPREAD_SERIES:
             s = SPREAD_SERIES[code]
@@ -112,7 +118,10 @@ def _prev_row(code: str) -> dict | None:
 
 
 def _series(code: str, start: date | None, end: date | None) -> list[dict]:
-    raw = get_series(code, start, end)
+    try:
+        raw = get_series(code, start, end)
+    except Exception:
+        raw = []
     if not raw and settings.use_sample_fallback:
         if code in SPREAD_SERIES:
             return list(SPREAD_SERIES.get(code, []))
