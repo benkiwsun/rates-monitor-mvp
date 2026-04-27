@@ -39,6 +39,17 @@ rates-monitor-mvp/
 └── requirements.txt
 ```
 
+## 上传到 GitHub（[@benkiwsun](https://github.com/benkiwsun)）
+
+1. 在 GitHub 新建空仓库：**[New repository](https://github.com/new)**，名称建议 **`rates-monitor-mvp`**，**不要**勾选「Add a README」。
+2. 本仓库已初始化 Git 并完成首次提交，远程为 `https://github.com/benkiwsun/rates-monitor-mvp.git`。创建好同名仓库后在本机执行：
+
+   ```bash
+   git push -u origin main
+   ```
+
+   若你使用了别的仓库名，请执行：`git remote set-url origin https://github.com/benkiwsun/<你的仓库名>.git` 再 `git push -u origin main`。
+
 ## Streamlit 部署（推荐快速上线仪表盘）
 
 ```bash
