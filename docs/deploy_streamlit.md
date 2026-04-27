@@ -22,6 +22,7 @@ streamlit run streamlit_app.py
 4. **`FRED_API_KEY`**：建议填写，否则美国收益率等 FRED 序列可能为空。
 5. 首次部署后，在应用侧栏点击 **「全量采集」** 写入数据；或在本地/CI 对同一数据库执行 `python -m backend.scripts.ingest_rates`。
 6. 若构建日志卡在 `Preparing metadata (pyproject.toml)`（常见于 pandas 源码编译），确认仓库根目录存在 `runtime.txt` 且内容为 `python-3.11.9`，然后在 Streamlit Cloud 执行 **Reboot app**。
+7. 若日志显示 Python 3.14 并报 `pydantic-core` / `PyO3` 兼容错误，确认根目录同时有 `.python-version`（`3.11`）与 `runtime.txt`，并执行 **Clear cache** + **Reboot app** 使环境重建。
 
 注意：Streamlit Cloud 对单次脚本执行有超时限制，若采集过久失败，请在网络稳定的环境对同一 `DATABASE_URL` 先跑一遍 `ingest_rates` 再打开应用。
 
