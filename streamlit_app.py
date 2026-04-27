@@ -86,7 +86,14 @@ def _db_ok() -> bool:
         return False
 
 
-def _latest_row(code: str) -> dict | None:
+def _latest_row(code: str, db_available: bool) -> dict | None:
+    if not db_available:
+        if settings.use_sample_fallback:
+            if code in SPREAD_SERIES:
+                s = SPREAD_SERIES[code]
+                return {"code": code, "value": s[-1]["value"], "unit": "pct", "source": "sample", "obs_time": s[-1]["obs_time"]}
+            return latest_for(code)
+        return None
     try:
         rows = get_latest_points([code])
         if rows:
@@ -101,7 +108,15 @@ def _latest_row(code: str) -> dict | None:
     return None
 
 
-def _prev_row(code: str) -> dict | None:
+def _prev_row(code: str, db_available: bool) -> dict | None:
+    if not db_available:
+        if settings.use_sample_fallback:
+            if code in SPREAD_SERIES:
+                s = SPREAD_SERIES[code]
+                if len(s) >= 2:
+                    return {"value": s[-2]["value"], "obs_time": s[-2]["obs_time"]}
+            return previous_for(code)
+        return None
     try:
         row = get_previous_point(code)
         if row:
@@ -117,7 +132,13 @@ def _prev_row(code: str) -> dict | None:
     return None
 
 
-def _series(code: str, start: date | None, end: date | None) -> list[dict]:
+def _series(code: str, start: date | None, end: date | None, db_available: bool) -> list[dict]:
+    if not db_available:
+        if settings.use_sample_fallback:
+            if code in SPREAD_SERIES:
+                return list(SPREAD_SERIES.get(code, []))
+            return list(RATE_SERIES.get(code, []))
+        return []
     try:
         raw = get_series(code, start, end)
     except Exception:
@@ -136,6 +157,7 @@ def main() -> None:
     with st.sidebar:
         st.subheader("连接与配置")
         ok = _db_ok()
+        st.session_state["db_available"] = ok
         st.write("PostgreSQL:", "已连接" if ok else "未连接（请检查 DATABASE_URL）")
         st.caption(f"`USE_SAMPLE_FALLBACK` = `{settings.use_sample_fallback}`")
         if st.button("全量采集（FRED + 央行 + PBoC + 利差）", type="primary"):
@@ -164,8 +186,8 @@ def main() -> None:
     with tab_overview:
         cols = st.columns(4)
         for i, code in enumerate(KPI_CODES):
-            cur = _latest_row(code)
-            prev = _prev_row(code) if cur else None
+            cur = _latest_row(code, ok)
+            prev = _prev_row(code, ok) if cur else None
             with cols[i % 4]:
                 if cur:
                     delta = None
@@ -183,8 +205,8 @@ def main() -> None:
     with tab_policy:
         rows_out = []
         for code in POLICY_CODES:
-            cur = _latest_row(code)
-            prev = _prev_row(code) if cur else None
+            cur = _latest_row(code, ok)
+            prev = _prev_row(code, ok) if cur else None
             if not cur:
                 rows_out.append({"code": code, "value": None, "chg": None, "source": None, "obs_time": None})
                 continue
@@ -214,7 +236,7 @@ def main() -> None:
 
                 fig = go.Figure()
                 for code in picked:
-                    ser = _series(code, start_d, end_d)
+                    ser = _series(code, start_d, end_d, ok)
                     if not ser:
                         continue
                     fig.add_trace(
