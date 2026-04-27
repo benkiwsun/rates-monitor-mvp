@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>利率监测驾驶舱 MVP</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Rates Monitor MVP</div>
+    <div class="meta">As of: {{ as_of }}</div>
+  </header>
+
+  <section class="filters card">
+    <span>时间区间：1M / 3M / 1Y / 3Y / MAX</span>
+    <span>频率：日 / 周 / 月</span>
+    <span>国家组：US / CN / Global</span>
+  </section>
+
+  <section class="grid cards">
+    {% for c in cards %}
+      <article class="kpi card">
+        <div class="code">{{ c.code }}</div>
+        <div class="value">{{ "%.4f"|format(c.value) }} {{ c.unit }}</div>
+        <div class="chg">1D: {{ "%+.4f"|format(c.chg_1d) }}</div>
+      </article>
+    {% endfor %}
+  </section>
+
+  <section class="layout">
+    <div class="left card">
+      <h3>主图区域（中美核心利率与利差）</h3>
+      <ul>
+        <li>Tab1: US2Y / US10Y / CN10Y</li>
+        <li>Tab2: 中美10Y利差 + 分位线</li>
+        <li>Tab3: US曲线斜率 + SOFR-IORB proxy</li>
+      </ul>
+      <div class="placeholder">[Chart Placeholder]</div>
+    </div>
+    <div class="right card">
+      <h3>最新告警</h3>
+      {% for a in alerts %}
+        <div class="alert {{ a.severity }}">
+          <strong>{{ a.rule_code }}</strong> - {{ a.message }} ({{ a.status }})
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="two-cols">
+    <div class="card">
+      <h3>央行政策利率热力图（线框）</h3>
+      <div class="placeholder">US / CN / JP / GB / EU / CH / CA / AU</div>
+    </div>
+    <div class="card">
+      <h3>US vs CN 收益率曲线截面（线框）</h3>
+      <div class="placeholder">Tenor: 1Y / 2Y / 10Y / 30Y</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>模块清单</h3>
+    <ul>
+      {% for s in sections %}
+      <li>{{ s }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</body>
+</html>

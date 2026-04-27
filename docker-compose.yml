@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rates_monitor
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rates_monitor"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "${HOST_PORT:-8000}:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/rates_monitor
+      FRED_API_KEY: ${FRED_API_KEY:-}
+      USE_SAMPLE_FALLBACK: "false"
+      SCHEDULER_ENABLED: "true"
+      ADMIN_INGEST_KEY: ${ADMIN_INGEST_KEY:-}
+      PORT: "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

@@ -1,0 +1,13 @@
+.env
+.streamlit/secrets.toml
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# local scrape probes
+_lpr_one.html
+_pbc_*.html
+_rba.html
