@@ -1,0 +1,37 @@
+name: Update Event Calendar
+
+on:
+  schedule:
+    - cron: "15 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests python-dateutil python-dotenv
+
+      - name: Build event calendar
+        env:
+          EVENT_SOURCE_URLS_JSON: ${{ secrets.EVENT_SOURCE_URLS_JSON }}
+        run: |
+          python -m backend.scripts.update_event_calendar
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: daily update event calendar"
+          file_pattern: desktop_terminal/feeds/events_calendar.csv
