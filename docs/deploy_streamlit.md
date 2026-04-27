@@ -21,6 +21,7 @@ streamlit run streamlit_app.py
 3. **Secrets**：在 App settings → Secrets 中粘贴 TOML，参考仓库根目录的 **`streamlit_secrets.example.toml`**。至少需要可用的 **`DATABASE_URL`**（推荐使用 [Neon](https://neon.tech)、[Supabase](https://supabase.com) 等托管 PostgreSQL；Streamlit Cloud 本身不提供 Postgres）。
 4. **`FRED_API_KEY`**：建议填写，否则美国收益率等 FRED 序列可能为空。
 5. 首次部署后，在应用侧栏点击 **「全量采集」** 写入数据；或在本地/CI 对同一数据库执行 `python -m backend.scripts.ingest_rates`。
+6. 若构建日志卡在 `Preparing metadata (pyproject.toml)`（常见于 pandas 源码编译），确认仓库根目录存在 `runtime.txt` 且内容为 `python-3.11.9`，然后在 Streamlit Cloud 执行 **Reboot app**。
 
 注意：Streamlit Cloud 对单次脚本执行有超时限制，若采集过久失败，请在网络稳定的环境对同一 `DATABASE_URL` 先跑一遍 `ingest_rates` 再打开应用。
 
