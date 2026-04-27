@@ -1,0 +1,25 @@
+date,type,country,title,importance
+2026-01-09,NFP,US,US Nonfarm Payrolls,high
+2026-01-10,CPI,US,US CPI Release,high
+2026-01-23,CB_MEETING,EU,ECB Governing Council,high
+2026-01-28,FOMC,US,FOMC Rate Decision,high
+2026-01-29,CB_MEETING,GB,BoE Monetary Policy Summary,high
+2026-02-06,NFP,US,US Nonfarm Payrolls,high
+2026-02-12,CPI,US,US CPI Release,high
+2026-03-06,NFP,US,US Nonfarm Payrolls,high
+2026-03-11,CPI,US,US CPI Release,high
+2026-03-12,CB_MEETING,EU,ECB Governing Council,high
+2026-03-18,FOMC,US,FOMC Rate Decision,high
+2026-03-19,CB_MEETING,GB,BoE Monetary Policy Summary,high
+2026-04-03,NFP,US,US Nonfarm Payrolls,high
+2026-04-10,CPI,US,US CPI Release,high
+2026-04-29,FOMC,US,FOMC Rate Decision,high
+2026-04-30,CB_MEETING,EU,ECB Governing Council,high
+2026-05-07,CB_MEETING,GB,BoE Monetary Policy Summary,high
+2026-06-11,CB_MEETING,EU,ECB Governing Council,high
+2026-06-17,FOMC,US,FOMC Rate Decision,high
+2026-06-18,CB_MEETING,GB,BoE Monetary Policy Summary,high
+2026-07-29,FOMC,US,FOMC Rate Decision,high
+2026-09-16,FOMC,US,FOMC Rate Decision,high
+2026-11-04,FOMC,US,FOMC Rate Decision,high
+2026-12-16,FOMC,US,FOMC Rate Decision,high
